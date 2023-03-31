@@ -12,12 +12,10 @@ import org.springframework.data.annotation.LastModifiedDate
 import java.time.LocalDateTime
 
 
-@Entity
+@Entity(name = "entity")
 @Table(
     indexes = [Index(
-        name = "letter_count_index",
-        columnList = "letter_count",
-        unique = false
+        name = "letter_count_index", columnList = "letter_count", unique = false
     ), Index(name = "rating_index", columnList = "rating", unique = false)]
 )
 class WordEntity {

@@ -8,11 +8,6 @@ spring:
     driver-class-name: org.postgresql.Driver
     platform: postgres
   jpa:
-    properties:
-      hibernate:
-        order_inserts: true
-        jdbc:
-          batch_size: 30
-    generate-ddl: false
+    generate-ddl: true
     hibernate:
       ddl-auto: create
