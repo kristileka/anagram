@@ -6,7 +6,7 @@ import org.springframework.data.redis.core.TimeToLive
 import java.io.Serializable
 
 @RedisHash("word_cache", timeToLive = 350L)
-class WordCacheEntity : Serializable {
+class StatelessWordEntity : Serializable {
     @Id
     private val id = 0
 

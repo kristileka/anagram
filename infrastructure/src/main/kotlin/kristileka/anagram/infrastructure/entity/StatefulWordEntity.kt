@@ -13,13 +13,13 @@ import org.springframework.data.annotation.LastModifiedDate
 import java.time.LocalDateTime
 
 
-@Entity(name = "word")
+@Entity(name = "stateful_word")
 @Table(
     indexes = [Index(
         name = "letter_count_index", columnList = "letter_count", unique = false
     )]
 )
-class WordEntity {
+class StatefulWordEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     var id: Long? = null
@@ -42,15 +42,15 @@ class WordEntity {
     val updatedAt: LocalDateTime? = null
 
     companion object {
-        fun Word.fromDomain(): WordEntity {
-            return WordEntity().also {
+        fun Word.fromDomain(): StatefulWordEntity {
+            return StatefulWordEntity().also {
                 it.value = this.value
                 it.predicate = this.predicate
                 it.letterCount = this.value.length
             }
         }
 
-        fun WordEntity.toDomain(): Word {
+        fun StatefulWordEntity.toDomain(): Word {
             return Word(
                 this.value!!,
                 this.predicate!!
