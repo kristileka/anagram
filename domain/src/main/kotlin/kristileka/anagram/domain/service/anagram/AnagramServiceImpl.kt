@@ -1,15 +1,23 @@
-package kristileka.anagram.domain.service
+package kristileka.anagram.domain.service.anagram
 
+import kotlinx.coroutines.*
 import kristileka.anagram.domain.dto.EvaluationResult
 import kristileka.anagram.domain.dto.Word
+import kristileka.anagram.domain.dto.WordAlreadyRegistered
 import kristileka.anagram.domain.extensions.Extensions.getPredicate
-import kristileka.anagram.domain.repository.WordRepository
+import kristileka.anagram.domain.repository.db.WordRepository
+import org.springframework.stereotype.Service
 
-class DomainWordService(
+@Service
+class AnagramServiceImpl(
+    var backgroundScope: CoroutineScope,
     var wordRepository: WordRepository
-) : WordService {
-    override fun evaluateAnagram(vararg values: String): EvaluationResult {
-        return EvaluationResult(values[0], values[1], values.map {
+) : AnagramService {
+    override suspend fun evaluateAnagram(vararg values: String): EvaluationResult = coroutineScope {
+        backgroundScope.launch {
+            wordRepository.save(Word(value = values[0], values[0].getPredicate()))
+        }
+        return@coroutineScope EvaluationResult(values[0], values[1], values.map {
             it.getPredicate()
         }.distinct().size == 1)
     }
@@ -34,19 +42,15 @@ class DomainWordService(
         }, selectedAnagram)
     }
 
-    override fun insertWord(value: String): Word {
-        TODO("Not yet implemented")
+    override fun insertWord(value: String): Boolean {
+        val savedWord = wordRepository.findWordByValue(value)
+        if (savedWord != null)
+            throw WordAlreadyRegistered()
+        return wordRepository.save(Word(value, value.getPredicate()))
     }
 
-    override fun uprateWord(value: String): Word {
-        TODO("Not yet implemented")
-    }
 
-    override fun downRateWord(value: String): Word {
-        TODO("Not yet implemented")
-    }
-
-    override fun searchForAnagram(value: String): List<Word> {
+    override suspend fun searchForAnagram(value: String): List<Word> {
         TODO("Not yet implemented")
     }
 }

@@ -1,6 +1,8 @@
-package kristileka.anagram.application.config
+package kristileka.anagram.application.advice
 
+import kristileka.anagram.domain.dto.AnagramException
 import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.validation.FieldError
 import org.springframework.validation.ObjectError
 import org.springframework.web.bind.MethodArgumentNotValidException
@@ -20,5 +22,14 @@ class ExceptionControllerAdvice {
             errors.getOrPut("validation_error") { mutableMapOf() }[fieldName] = errorMessage
         }
         return errors
+    }
+
+    @ExceptionHandler(AnagramException::class)
+    fun handleValidationExceptions(ex: AnagramException): ResponseEntity<ErrorModelREST> {
+        return ResponseEntity.status(ex.httpStatus).body(
+            ErrorModelREST(
+                ex.message
+            )
+        )
     }
 }

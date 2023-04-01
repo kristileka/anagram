@@ -1,6 +1,9 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
+    id("org.springframework.boot") version "3.0.5"
+    id("io.spring.dependency-management") version "1.1.0"
+    kotlin("plugin.spring") version "1.7.22"
     kotlin("jvm") version "1.7.22"
 }
 
@@ -19,7 +22,9 @@ repositories {
 }
 
 dependencies {
+    implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
 }
 
 tasks.withType<KotlinCompile> {
@@ -31,4 +36,13 @@ tasks.withType<KotlinCompile> {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+}
+
+tasks {
+    bootJar {
+        enabled = false
+    }
+    bootRun {
+        enabled = false
+    }
 }

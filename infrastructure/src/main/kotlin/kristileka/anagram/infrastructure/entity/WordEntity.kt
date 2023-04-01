@@ -7,16 +7,17 @@ import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.Index
 import jakarta.persistence.Table
+import kristileka.anagram.domain.dto.Word
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
 import java.time.LocalDateTime
 
 
-@Entity(name = "entity")
+@Entity(name = "word")
 @Table(
     indexes = [Index(
         name = "letter_count_index", columnList = "letter_count", unique = false
-    ), Index(name = "rating_index", columnList = "rating", unique = false)]
+    )]
 )
 class WordEntity {
     @Id
@@ -32,14 +33,28 @@ class WordEntity {
     @Column(name = "letter_count")
     var letterCount: Int? = null
 
-    @Column(name = "rating")
-    var rating: Int? = null
-
     @CreatedDate
     @Column(name = "created_at", nullable = false, updatable = false)
-    val createdAt: LocalDateTime? = null
+    val createdAt: LocalDateTime? = LocalDateTime.now()
 
     @LastModifiedDate
     @Column(name = "updated_at")
     val updatedAt: LocalDateTime? = null
+
+    companion object {
+        fun Word.fromDomain(): WordEntity {
+            return WordEntity().also {
+                it.value = this.value
+                it.predicate = this.predicate
+                it.letterCount = this.value.length
+            }
+        }
+
+        fun WordEntity.toDomain(): Word {
+            return Word(
+                this.value!!,
+                this.predicate!!
+            )
+        }
+    }
 }
