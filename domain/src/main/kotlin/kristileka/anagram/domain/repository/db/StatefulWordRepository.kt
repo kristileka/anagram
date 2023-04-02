@@ -8,4 +8,5 @@ interface StatefulWordRepository {
     fun findWordById(id: Long): Word?
     fun findWordByValue(value: String): Word?
     fun filterByPredicate(predicate: String): List<Word>
+    fun findWordsByValueIn(values: List<String>): List<String>
 }

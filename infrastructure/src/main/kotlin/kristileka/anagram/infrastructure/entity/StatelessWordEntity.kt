@@ -2,16 +2,13 @@ package kristileka.anagram.infrastructure.entity
 
 import jakarta.persistence.Id
 import org.springframework.data.redis.core.RedisHash
-import org.springframework.data.redis.core.TimeToLive
-import java.io.Serializable
 
-@RedisHash("word_cache", timeToLive = 350L)
-class StatelessWordEntity : Serializable {
+@RedisHash("word_cache")
+class StatelessWordEntity {
     @Id
-    private val id = 0
+    var id: String? = null
 
-    private val value: String? = null
+    var value: String? = null
 
-    @TimeToLive
-    private val price: Long = 0
+    var predicate: String? = null
 }

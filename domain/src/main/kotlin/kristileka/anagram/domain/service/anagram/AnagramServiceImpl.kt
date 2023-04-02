@@ -1,6 +1,9 @@
 package kristileka.anagram.domain.service.anagram
 
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
+import kristileka.anagram.domain.dto.AnagramCouldNotBeFound
 import kristileka.anagram.domain.dto.EvaluationResult
 import kristileka.anagram.domain.dto.Word
 import kristileka.anagram.domain.dto.WordAlreadyRegistered
@@ -11,48 +14,83 @@ import org.springframework.stereotype.Service
 
 @Service
 class AnagramServiceImpl(
-    var backgroundScope: CoroutineScope,
-    var statefulWordRepository: StatefulWordRepository,
-    var statelessWordRepository: StatelessWordRepository
+    val backgroundScope: CoroutineScope,
+    val statefulWordRepository: StatefulWordRepository,
+    val statelessWordRepository: StatelessWordRepository,
 ) : AnagramService {
     override suspend fun evaluateAnagram(vararg values: String): EvaluationResult = coroutineScope {
-        backgroundScope.launch {
-            statefulWordRepository.save(Word(value = values[0], values[0].getPredicate()))
+        val word1 = Word(
+            values[0],
+            values[0].getPredicate(),
+        )
+        val word2 = Word(
+            values[1],
+            values[1].getPredicate(),
+        )
+        val result = word1.predicate == word2.predicate
+        registerStatelessWords(
+            listOf(
+                word1,
+                word2,
+            ),
+        )
+        return@coroutineScope EvaluationResult(
+            word1.value,
+            word2.value,
+            result,
+        )
+    }
+
+    override suspend fun evaluateAnagram(
+        listWords: List<String>,
+    ): Pair<List<EvaluationResult>, String> = coroutineScope {
+        val words = listWords.map {
+            Word(it, it.getPredicate())
         }
-        return@coroutineScope EvaluationResult(values[0], values[1], values.map {
-            it.getPredicate()
-        }.distinct().size == 1)
+        registerStatelessWords(
+            words,
+        )
+        return@coroutineScope evaluateAnagramResulted(words = words)
     }
 
-    override fun evaluateAnagram(words: List<String>, takeFirst: Boolean): Pair<List<EvaluationResult>, String> {
-        return evaluateAnagramResulted(words = words)
-    }
-
-    fun evaluateAnagramResulted(
-        words: List<String>,
+    private fun evaluateAnagramResulted(
+        words: List<Word>,
     ): Pair<List<EvaluationResult>, String> {
-        val wordsToPredicate = words.map { it to it.getPredicate() }
-        val atMostPredicate = wordsToPredicate.groupingBy { it.second }.eachCount()
-            .maxByOrNull { it.value }?.key
-        val selectedAnagram = wordsToPredicate.first { it.second == atMostPredicate }.first
-        return Pair(wordsToPredicate.map {
-            EvaluationResult(
-                it.first,
-                selectedAnagram,
-                it.second == atMostPredicate
-            )
-        }, selectedAnagram)
+        val atMostPredicate = words.groupingBy { it.predicate }.eachCount().maxByOrNull { it.value }?.key
+        val selectedAnagram = words.first { it.predicate == atMostPredicate }.value
+        return Pair(
+            words.map {
+                EvaluationResult(
+                    it.value,
+                    selectedAnagram,
+                    it.predicate == atMostPredicate,
+                )
+            },
+            selectedAnagram,
+        )
     }
 
     override fun insertWord(value: String): Boolean {
-        val savedWord = statefulWordRepository.findWordByValue(value)
-        if (savedWord != null)
-            throw WordAlreadyRegistered()
+        val statefulWord = statefulWordRepository.findWordByValue(value)
+        if (statefulWord != null) throw WordAlreadyRegistered()
         return statefulWordRepository.save(Word(value, value.getPredicate()))
     }
 
+    override fun searchForAnagram(value: String): List<String> {
+        val statefulWordsByPredicate = statefulWordRepository.filterByPredicate(
+            value.getPredicate(),
+        )
+        if (statefulWordsByPredicate.isEmpty()) throw AnagramCouldNotBeFound()
+        return statefulWordsByPredicate.map {
+            it.value
+        }
+    }
 
-    override suspend fun searchForAnagram(value: String): List<Word> {
-        TODO("Not yet implemented")
+    suspend fun registerStatelessWords(words: List<Word>) {
+        backgroundScope.launch {
+            statelessWordRepository.putOnQueue(
+                words,
+            )
+        }
     }
 }

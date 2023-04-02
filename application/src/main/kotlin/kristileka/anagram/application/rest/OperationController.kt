@@ -5,6 +5,7 @@ import kristileka.anagram.application.models.messaging.Message
 import kristileka.anagram.application.models.request.AnagramEvaluateListRequestREST
 import kristileka.anagram.application.models.request.AnagramEvaluateRequestREST
 import kristileka.anagram.application.models.response.AnagramEvaluateListResponseREST
+import kristileka.anagram.application.models.response.AnagramSearchOperationResponseREST
 import kristileka.anagram.application.models.response.AnagramSingleEvaluationResponseREST
 import kristileka.anagram.application.models.response.OperationSuccessfulREST
 import kristileka.anagram.domain.service.anagram.AnagramService
@@ -12,6 +13,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
@@ -22,49 +24,66 @@ class OperationController(
     private val wordService: AnagramService,
 ) {
 
-    @GetMapping("/{first}/{second}")
+    @GetMapping("singular/{first}/{second}")
     suspend fun evaluateInLine(
-        @PathVariable("first") firstWord: String, @PathVariable("second") secondWord: String
+        @PathVariable("first") firstWord: String,
+        @PathVariable("second") secondWord: String,
     ): ResponseEntity<AnagramSingleEvaluationResponseREST> {
         return ResponseEntity.ok(
             AnagramSingleEvaluationResponseREST(
-                wordService.evaluateAnagram(firstWord, secondWord)
-            )
+                wordService.evaluateAnagram(firstWord, secondWord),
+            ),
         )
     }
 
     @PostMapping
     suspend fun evaluate(
-        @Valid @RequestBody request: AnagramEvaluateRequestREST
+        @Valid @RequestBody
+        request: AnagramEvaluateRequestREST,
     ): ResponseEntity<AnagramSingleEvaluationResponseREST> {
         return ResponseEntity.ok(
             AnagramSingleEvaluationResponseREST(
                 wordService.evaluateAnagram(
-                    request.firstWord, request.secondWord
-                )
-            )
+                    request.firstWord,
+                    request.secondWord,
+                ),
+            ),
         )
     }
 
     @PostMapping("multiple")
-    fun evaluateMultiple(
-        @Valid @RequestBody request: AnagramEvaluateListRequestREST
+    suspend fun evaluateMultiple(
+        @Valid @RequestBody
+        request: AnagramEvaluateListRequestREST,
     ): ResponseEntity<AnagramEvaluateListResponseREST> {
         return ResponseEntity.ok(
             AnagramEvaluateListResponseREST(
-                wordService.evaluateAnagram(request.words)
-            )
+                wordService.evaluateAnagram(request.words),
+            ),
         )
     }
 
-    @PostMapping("insert/{word}")
+    @PutMapping("insert/{word}")
     fun evaluateMultiple(
-        @PathVariable("word") word: String
+        @PathVariable("word") word: String,
     ): ResponseEntity<OperationSuccessfulREST> {
         return ResponseEntity.ok(
             OperationSuccessfulREST(
-                wordService.insertWord(word), Message.WORD_INSERTED
-            )
+                wordService.insertWord(word),
+                Message.WORD_INSERTED,
+            ),
+        )
+    }
+
+    @GetMapping("search/{word}")
+    fun searchForAnagram(
+        @PathVariable("word") word: String,
+    ): ResponseEntity<AnagramSearchOperationResponseREST> {
+        return ResponseEntity.ok(
+            AnagramSearchOperationResponseREST(
+                wordService.searchForAnagram(word),
+                word,
+            ),
         )
     }
 }

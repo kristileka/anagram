@@ -3,13 +3,13 @@ package kristileka.anagram.application.models.response
 import kristileka.anagram.domain.dto.EvaluationResult
 
 data class AnagramSingleEvaluationResponseREST(
-    var firstWord: String,
-    var secondWord: String,
-    var result: Boolean
+    val firstWord: String,
+    val secondWord: String,
+    val result: Boolean,
 ) {
     constructor(evaluationResult: EvaluationResult) : this(
         evaluationResult.word,
         evaluationResult.potentialAnagram,
-        evaluationResult.result
+        evaluationResult.result,
     )
 }

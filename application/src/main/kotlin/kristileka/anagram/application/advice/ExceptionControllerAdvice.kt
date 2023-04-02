@@ -28,8 +28,8 @@ class ExceptionControllerAdvice {
     fun handleValidationExceptions(ex: AnagramException): ResponseEntity<ErrorModelREST> {
         return ResponseEntity.status(ex.httpStatus).body(
             ErrorModelREST(
-                ex.message
-            )
+                ex.message,
+            ),
         )
     }
 }

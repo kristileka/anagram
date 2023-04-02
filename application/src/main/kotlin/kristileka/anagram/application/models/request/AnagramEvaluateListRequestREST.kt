@@ -5,6 +5,6 @@ import jakarta.validation.constraints.Size
 data class AnagramEvaluateListRequestREST(
 
     @field:Size(min = 2, message = "At least 2 words are required!")
-    var words: List<String>,
-    var findBestEvaluation: Boolean = false
+    val words: List<String>,
+    val findBestEvaluation: Boolean = false,
 )

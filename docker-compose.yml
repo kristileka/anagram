@@ -17,14 +17,14 @@ services:
     ports:
       - '6379:6379'
 
-#  app:
-#    build: .
-#    ports:
-#      - "9000:9000"
-#    environment:
-#      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/anagram
-#      SPRING_DATASOURCE_USERNAME: user
-#      SPRING_DATASOURCE_PASSWORD: password
-#    depends_on:
-#      - db
-#      - cache
+  app:
+    build: .
+    ports:
+      - "9000:9000"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/anagram
+      SPRING_DATASOURCE_USERNAME: user
+      SPRING_DATASOURCE_PASSWORD: password
+    depends_on:
+      - db
+      - cache

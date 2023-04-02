@@ -1,7 +1,6 @@
 package kristileka.anagram.application.models.response
 
 data class OperationSuccessfulREST(
-    var status: Boolean,
-    var message: String
+    val status: Boolean,
+    val message: String,
 )
-

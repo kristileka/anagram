@@ -16,12 +16,13 @@ class ContentController(
 ) {
     @PutMapping("insert/{word}")
     fun evaluateMultiple(
-        @PathVariable("word") word: String
+        @PathVariable("word") word: String,
     ): ResponseEntity<OperationSuccessfulREST> {
         return ResponseEntity.ok(
             OperationSuccessfulREST(
-                wordService.insertWord(word), Message.WORD_INSERTED
-            )
+                wordService.insertWord(word),
+                Message.WORD_INSERTED,
+            ),
         )
     }
 }
