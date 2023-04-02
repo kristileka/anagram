@@ -89,7 +89,7 @@ class AnagramServiceImpl(
         }
     }
 
-    suspend fun registerStatelessWords(words: List<Word>) {
+    private suspend fun registerStatelessWords(words: List<Word>) {
         backgroundScope.launch {
             statelessWordRepository.putOnQueue(
                 words,

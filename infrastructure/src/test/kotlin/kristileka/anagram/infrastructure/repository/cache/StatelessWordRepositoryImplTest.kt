@@ -4,16 +4,10 @@ import io.mockk.every
 import io.mockk.mockk
 import kristileka.anagram.domain.common.DomainMapper
 import kristileka.anagram.domain.dto.Word
-import kristileka.anagram.domain.repository.cache.StatelessWordRepository
-import kristileka.anagram.domain.repository.db.StatefulWordRepository
-import kristileka.anagram.infrastructure.entity.StatefulWordEntity
 import kristileka.anagram.infrastructure.entity.StatelessWordEntity
-import kristileka.anagram.infrastructure.repository.db.PostgresRepository
-import kristileka.anagram.infrastructure.repository.db.StatefulWordRepositoryImpl
-import org.junit.jupiter.api.Test
-
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertDoesNotThrow
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.mockito.Mock
 
 class StatelessWordRepositoryImplTest {
@@ -22,7 +16,6 @@ class StatelessWordRepositoryImplTest {
     private val redisRepository: RedisRepository = mockk()
 
     @Mock
-
     private val domainMapper: DomainMapper<StatelessWordEntity> = mockk()
     private lateinit var statelessWordRepository: StatelessWordRepositoryImpl
 

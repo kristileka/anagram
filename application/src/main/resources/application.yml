@@ -1,5 +1,8 @@
 server:
   port: 9000
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
 spring:
   output:
     ansi:

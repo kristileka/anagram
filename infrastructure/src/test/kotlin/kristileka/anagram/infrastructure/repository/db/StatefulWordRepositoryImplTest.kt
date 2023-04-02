@@ -6,24 +6,16 @@ import kristileka.anagram.domain.common.DomainMapper
 import kristileka.anagram.domain.dto.Word
 import kristileka.anagram.domain.repository.db.StatefulWordRepository
 import kristileka.anagram.infrastructure.entity.StatefulWordEntity
-import kristileka.anagram.infrastructure.mapper.StatefulWordMapper
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
-import org.mockito.Mockito
-import org.springframework.data.repository.findByIdOrNull
-import java.rmi.AlreadyBoundException
-import java.util.*
-
 
 class StatefulWordRepositoryImplTest {
-
 
     @Mock
     private val postgresRepository: PostgresRepository = mockk()
 
     @Mock
-
     private val domainMapper: DomainMapper<StatefulWordEntity> = mockk()
     private lateinit var statefulWordRepository: StatefulWordRepository
 
@@ -120,7 +112,6 @@ class StatefulWordRepositoryImplTest {
         assert(result.size == statefulWordEntity.size)
     }
 
-
     @Test
     fun `find word by value fails`() {
         val statefulWordEntity = StatefulWordEntity()
@@ -153,7 +144,6 @@ class StatefulWordRepositoryImplTest {
         val result = statefulWordRepository.findWordByValue("asd")
         assert(result == word)
     }
-
 
     @Test
     fun filterByPredicate() {
@@ -193,9 +183,11 @@ class StatefulWordRepositoryImplTest {
     @Test
     fun `find words will return only the real statefulWords`() {
         val words = listOf("test", "test1")
-        val statefulWordEntity = listOf(StatefulWordEntity().apply {
-            this.value = "asd"
-        })
+        val statefulWordEntity = listOf(
+            StatefulWordEntity().apply {
+                this.value = "asd"
+            },
+        )
         every {
             postgresRepository.findAllByValueIn(any())
         } returns statefulWordEntity

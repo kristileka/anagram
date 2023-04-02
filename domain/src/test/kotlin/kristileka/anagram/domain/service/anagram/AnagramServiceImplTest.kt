@@ -3,18 +3,24 @@ package kristileka.anagram.domain.service.anagram
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.runBlocking
+import kristileka.anagram.domain.dto.AnagramCouldNotBeFound
 import kristileka.anagram.domain.dto.Word
 import kristileka.anagram.domain.dto.WordAlreadyRegistered
 import kristileka.anagram.domain.repository.cache.StatelessWordRepository
 import kristileka.anagram.domain.repository.db.StatefulWordRepository
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertThrows
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
-import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.api.BeforeEach
-
 class AnagramServiceImplTest {
-    val backgroundScope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+    private val backgroundScope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
     @MockK
     val statefulWordRepository: StatefulWordRepository = mockk()
@@ -64,27 +70,28 @@ class AnagramServiceImplTest {
     fun `evaluate listAnagrams dynamically`() = runBlocking {
         val words = mapOf("word" to true, "dowr" to true, "asdd" to false, "word2" to false)
 
-        val results = anagramService.evaluateAnagram(words.map {
-            it.key
-        })
+        val results = anagramService.evaluateAnagram(
+            words.map {
+                it.key
+            },
+        )
         results.first.forEach {
             assertEquals(it.result, words[it.word]!!)
         }
     }
 
     @Test
-    fun `Insert throws error`() {
+    fun `insert throws error`() {
         every {
             statefulWordRepository.findWordByValue("test")
         } returns Word("test", "etts")
         assertThrows(
-            WordAlreadyRegistered::class.java
+            WordAlreadyRegistered::class.java,
         ) { anagramService.insertWord("test") }
     }
 
     @Test
     fun `insert is not done correctly`() {
-        val word = Word("test", "etts")
         every {
             statefulWordRepository.findWordByValue("test")
         } returns null
@@ -109,10 +116,23 @@ class AnagramServiceImplTest {
     }
 
     @Test
-    fun searchForAnagram() {
+    fun `search for anagram will return empty list`() {
+        every {
+            statefulWordRepository.filterByPredicate("ads")
+        } returns listOf()
+        assertThrows(
+            AnagramCouldNotBeFound::class.java,
+        ) { anagramService.searchForAnagram("sad") }
     }
 
     @Test
-    fun registerStatelessWords() {
+    fun `search for anagram will return list with elements`() {
+        val words = listOf(Word("test", "Test"))
+        every {
+            statefulWordRepository.filterByPredicate("ads")
+        } returns words
+        val result = anagramService.searchForAnagram("sad")
+        assertTrue(result.isNotEmpty())
+        assertEquals(words.first().value, result.first())
     }
 }

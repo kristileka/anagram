@@ -9,18 +9,19 @@ import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
-@RestController
+@RestController("Manage content of stateful words.")
 @RequestMapping("/api/v1/content")
 class ContentController(
-    private val wordService: AnagramService,
+    private val anagramService: AnagramService,
 ) {
+
     @PutMapping("insert/{word}")
-    fun evaluateMultiple(
+    fun insertWord(
         @PathVariable("word") word: String,
     ): ResponseEntity<OperationSuccessfulREST> {
         return ResponseEntity.ok(
             OperationSuccessfulREST(
-                wordService.insertWord(word),
+                anagramService.insertWord(word),
                 Message.WORD_INSERTED,
             ),
         )

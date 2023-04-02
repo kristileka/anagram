@@ -5,7 +5,7 @@ import io.mockk.mockk
 import kristileka.anagram.domain.dto.Word
 import kristileka.anagram.domain.repository.cache.StatelessWordRepository
 import kristileka.anagram.domain.repository.db.StatefulWordRepository
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertDoesNotThrow
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock

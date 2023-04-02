@@ -4,7 +4,6 @@ import kristileka.anagram.domain.common.DomainMapper
 import kristileka.anagram.domain.dto.Word
 import kristileka.anagram.domain.repository.db.StatefulWordRepository
 import kristileka.anagram.infrastructure.entity.StatefulWordEntity
-import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 
 @Service
@@ -16,7 +15,7 @@ class StatefulWordRepositoryImpl(
         return domainMapper.toDomain(
             postgresRepository.save(
                 domainMapper.fromDomain(word),
-            )
+            ),
         )
     }
 
@@ -26,7 +25,6 @@ class StatefulWordRepositoryImpl(
             domainMapper.toDomain(it)
         }
     }
-
 
     override fun findWordByValue(value: String): Word? {
         val word = postgresRepository.findByValue(value) ?: return null

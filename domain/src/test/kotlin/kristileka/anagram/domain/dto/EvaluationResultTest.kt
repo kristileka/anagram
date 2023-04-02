@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test
 class EvaluationResultTest {
 
     @Test
-    fun `validate field properties`() {
+    fun `validate field properties EvaluationResult`() {
         val word = "test"
         val potentialAnagram = "estt"
         val result = true

@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test
 
 class WordTest {
     @Test
-    fun `validate field properties`() {
+    fun `validate field properties Word`() {
         val value = "test"
         val predicate = "estt"
         val word = Word(value, predicate)

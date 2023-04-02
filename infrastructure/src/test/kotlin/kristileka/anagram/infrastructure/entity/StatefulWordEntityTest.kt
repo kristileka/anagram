@@ -1,13 +1,14 @@
 package kristileka.anagram.infrastructure.entity
 
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
 
 class StatefulWordEntityTest {
 
     @Test
-    fun `test properties`() {
+    fun `test validate properties StatefulWordEntity`() {
         val addedValue = "test1"
         val addedPredicate = "test2"
         val addedLetterCount = 5
