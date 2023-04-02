@@ -73,7 +73,7 @@ class AnagramServiceImpl(
     override fun insertWord(value: String): Boolean {
         val statefulWord = statefulWordRepository.findWordByValue(value)
         if (statefulWord != null) throw WordAlreadyRegistered()
-        return statefulWordRepository.save(Word(value, value.getPredicate()))
+        return statefulWordRepository.save(Word(value, value.getPredicate())) != null
     }
 
     override fun searchForAnagram(value: String): List<String> {

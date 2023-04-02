@@ -12,11 +12,12 @@ class StatefulWordRepositoryImpl(
     val postgresRepository: PostgresRepository,
     val domainMapper: DomainMapper<StatefulWordEntity>,
 ) : StatefulWordRepository {
-    override fun save(word: Word): Boolean {
-        postgresRepository.save(
-            domainMapper.fromDomain(word),
+    override fun save(word: Word): Word? {
+        return domainMapper.toDomain(
+            postgresRepository.save(
+                domainMapper.fromDomain(word),
+            )
         )
-        return true
     }
 
     override fun saveAll(words: List<Word>): List<Word> {
