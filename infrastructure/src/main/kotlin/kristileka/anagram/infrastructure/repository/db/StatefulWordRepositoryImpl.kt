@@ -27,10 +27,6 @@ class StatefulWordRepositoryImpl(
         }
     }
 
-    override fun findWordById(id: Long): Word? {
-        val word = postgresRepository.findByIdOrNull(id) ?: return null
-        return domainMapper.toDomain(word)
-    }
 
     override fun findWordByValue(value: String): Word? {
         val word = postgresRepository.findByValue(value) ?: return null

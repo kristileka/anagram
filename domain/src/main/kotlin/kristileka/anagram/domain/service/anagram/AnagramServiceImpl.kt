@@ -11,6 +11,7 @@ import kristileka.anagram.domain.extensions.Extensions.getPredicate
 import kristileka.anagram.domain.repository.cache.StatelessWordRepository
 import kristileka.anagram.domain.repository.db.StatefulWordRepository
 import org.springframework.stereotype.Service
+import kotlin.jvm.Throws
 
 @Service
 class AnagramServiceImpl(
@@ -70,12 +71,14 @@ class AnagramServiceImpl(
         )
     }
 
+    @Throws(WordAlreadyRegistered::class)
     override fun insertWord(value: String): Boolean {
         val statefulWord = statefulWordRepository.findWordByValue(value)
         if (statefulWord != null) throw WordAlreadyRegistered()
         return statefulWordRepository.save(Word(value, value.getPredicate())) != null
     }
 
+    @Throws(AnagramCouldNotBeFound::class)
     override fun searchForAnagram(value: String): List<String> {
         val statefulWordsByPredicate = statefulWordRepository.filterByPredicate(
             value.getPredicate(),

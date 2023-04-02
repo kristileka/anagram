@@ -5,7 +5,7 @@ import kristileka.anagram.domain.dto.Word
 import kristileka.anagram.infrastructure.entity.StatelessWordEntity
 import org.springframework.stereotype.Service
 
-@Service()
+@Service
 class StatelessWordMapper : DomainMapper<StatelessWordEntity> {
     override fun fromDomain(word: Word): StatelessWordEntity {
         return StatelessWordEntity().apply {
