@@ -1,0 +1,115 @@
+{
+	"info": {
+		"_postman_id": "c3ccb0ff-8eeb-4553-970c-5fc0951baef3",
+		"name": "Anagram",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Evaulate",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9000/api/v1/evaluate/singular/asd1/asd",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"api",
+						"v1",
+						"evaluate",
+						"singular",
+						"asd1",
+						"asd"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Evaulate POST",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"firstWord\": \"word\",\n    \"secondWord\": \"wrod\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9000/api/v1/evaluate",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"api",
+						"v1",
+						"evaluate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Evaluate Multiple",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9000/api/v1/evaluate/multiple",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"api",
+						"v1",
+						"evaluate",
+						"multiple"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Insert Word",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9000/api/v1/content/kristi",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"api",
+						"v1",
+						"content",
+						"kristi"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search Anagram",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		}
+	]
+}
