@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service
 
 @Service
 class CacheQueueService(val queueManagerService: QueueManagerService) {
-    @Scheduled(fixedDelay = 1 * 5 * 1000)
+    @Scheduled(fixedDelay = 1 * 60 * 1000)
     fun checkCacheQueue() {
         queueManagerService.handleQueue()
     }

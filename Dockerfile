@@ -2,10 +2,9 @@ FROM openjdk:17-jdk-slim
 
 WORKDIR /app
 
-COPY . .
+COPY  . .
 
-RUN ./gradlew build
+RUN ./gradlew clean build  -x test --no-daemon
 
-COPY application/build/libs/*.jar app.jar
-
-ENTRYPOINT ["java","-jar","/app/app.jar"]
+ENTRYPOINT ["java", "-jar", "/app/application/build/libs/application-0.0.1-SNAPSHOT.jar"]
+EXPOSE 9000

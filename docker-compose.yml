@@ -5,6 +5,8 @@ services:
     ports:
       - "5432:5432"
     restart: always
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     environment:
       - POSTGRES_PASSWORD=password
       - POSTGRES_USER=user
@@ -16,15 +18,16 @@ services:
     restart: always
     ports:
       - '6379:6379'
-
-  app:
-    build: .
-    ports:
-      - "9000:9000"
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/anagram
-      SPRING_DATASOURCE_USERNAME: user
-      SPRING_DATASOURCE_PASSWORD: password
-    depends_on:
-      - db
-      - cache
+#
+#  app:
+#    build: .
+#    ports:
+#      - "9000:9000"
+#    environment:
+#      REDIS_HOST: cache
+#      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/anagram
+#      SPRING_DATASOURCE_USERNAME: user
+#      SPRING_DATASOURCE_PASSWORD: password
+#    depends_on:
+#      - db
+#      - cache
